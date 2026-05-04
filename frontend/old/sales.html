@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Sale - Photocopy Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <button onclick="window.location.href='dashboard.html'" class="btn btn-secondary btn-sm">← Back</button>
+            <h1 class="navbar-brand">New Sale</h1>
+            <div></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="sales-grid">
+            <!-- Customer Selection -->
+            <div class="customer-section">
+                <h2>Customer</h2>
+
+                <div class="customer-buttons">
+                    <button id="guestCustomerBtn" class="btn btn-success btn-large active">
+                        🚶 Guest Customer
+                    </button>
+                    <button id="namedCustomerBtn" class="btn btn-secondary btn-large">
+                        👤 Named Customer
+                    </button>
+                </div>
+
+                <div id="namedCustomerSection" style="display: none;">
+                    <div class="form-group">
+                        <label>Search Customer</label>
+                        <input type="text" id="customerSearch" class="form-control" placeholder="Search by name or phone...">
+                    </div>
+
+                    <div id="customerList" class="customer-list"></div>
+
+                    <button id="addNewCustomerBtn" class="btn btn-primary btn-block">+ Add New Customer</button>
+                </div>
+
+                <div id="selectedCustomerDisplay" class="selected-customer" style="display: none;">
+                    <strong>Selected: </strong><span id="selectedCustomerName">Guest</span>
+                </div>
+            </div>
+
+            <!-- Items Section -->
+            <div class="items-section">
+                <h2>Add Items</h2>
+
+                <div class="category-tabs">
+                    <button class="tab-btn active" data-category="all">All</button>
+                    <button class="tab-btn" data-category="Stationery">Stationery</button>
+                    <button class="tab-btn" data-category="Printing">Printing</button>
+                    <button class="tab-btn" data-category="Photocopying">Photocopying</button>
+                    <button class="tab-btn" data-category="Services">Services</button>
+                </div>
+
+                <div class="product-grid" id="productGrid"></div>
+            </div>
+
+            <!-- Bill Summary -->
+            <div class="bill-section">
+                <h2>Bill Summary</h2>
+
+                <div id="billItems" class="bill-items"></div>
+
+                <div class="bill-totals">
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">Rs. 0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Tax:</span>
+                        <span id="tax">Rs. 0.00</span>
+                    </div>
+                    <div class="total-row total-final">
+                        <strong>Total:</strong>
+                        <strong id="total">Rs. 0.00</strong>
+                    </div>
+                </div>
+
+                <div class="payment-options">
+                    <button id="paidCashBtn" class="btn btn-success btn-block">Paid (Cash)</button>
+                    <button id="paidOnlineBtn" class="btn btn-success btn-block">Paid (Online)</button>
+                    <button id="creditBtn" class="btn btn-danger btn-block">Credit</button>
+                </div>
+
+                <div class="print-option">
+                    <label>
+                        <input type="checkbox" id="printBill" checked>
+                        Print A5 Bill
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div id="addCustomerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Customer</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="addCustomerForm">
+                <div class="form-group">
+                    <label for="customerName">Name *</label>
+                    <input type="text" id="customerName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Phone</label>
+                    <input type="text" id="customerPhone" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Add Customer</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/sales.js"></script>
+</body>
+</html>

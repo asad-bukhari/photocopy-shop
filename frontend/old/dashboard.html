@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Photocopy Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="navbar-brand">Photocopy Shop</h1>
+            <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard-stats">
+            <div class="stat-card stat-sales">
+                <div class="stat-icon">💰</div>
+                <div class="stat-content">
+                    <h3>Today's Sales</h3>
+                    <p class="stat-value" id="todaySales">Rs. 0.00</p>
+                </div>
+            </div>
+
+            <div class="stat-card stat-credit">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <h3>Today's Credit</h3>
+                    <p class="stat-value" id="todayCredit">Rs. 0.00</p>
+                </div>
+            </div>
+
+            <div class="stat-card stat-stock">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-content">
+                    <h3>Low Stock</h3>
+                    <p class="stat-value" id="lowStockCount">0</p>
+                    <small id="lowStockItems"></small>
+                </div>
+            </div>
+
+            <div class="stat-card stat-bills">
+                <div class="stat-icon">📋</div>
+                <div class="stat-content">
+                    <h3>Pending Bills</h3>
+                    <p class="stat-value" id="pendingBills">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <button onclick="window.location.href='sales.html'" class="btn btn-primary btn-large">
+                🛒 New Sale
+            </button>
+            <button onclick="window.location.href='customers.html'" class="btn btn-success btn-large">
+                👥 Receive Payment
+            </button>
+            <button onclick="window.location.href='inventory.html'" class="btn btn-info btn-large">
+                📦 Inventory
+            </button>
+            <button onclick="window.location.href='reports.html'" class="btn btn-secondary btn-large">
+                📊 Reports
+            </button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

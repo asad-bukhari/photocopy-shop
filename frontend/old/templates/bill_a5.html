@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>A5 Bill</title>
+    <style>
+        @page {
+            size: A5;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            width: 148mm;
+            height: 210mm;
+            margin: 0;
+            padding: 10mm;
+            box-sizing: border-box;
+        }
+
+        .bill-header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .bill-header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .bill-header p {
+            margin: 2px 0;
+            font-size: 11px;
+        }
+
+        .bill-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 11px;
+        }
+
+        .customer-info {
+            margin-bottom: 10px;
+            font-size: 11px;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            font-size: 11px;
+        }
+
+        .items-table th,
+        .items-table td {
+            border-bottom: 1px solid #000;
+            padding: 4px;
+            text-align: left;
+        }
+
+        .items-table th {
+            font-weight: bold;
+        }
+
+        .items-table .qty {
+            text-align: center;
+        }
+
+        .items-table .price,
+        .items-table .total {
+            text-align: right;
+        }
+
+        .bill-totals {
+            margin-top: 10px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+
+        .grand-total {
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 8px 0;
+        }
+
+        .payment-status {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 8px;
+        }
+
+        .status-paid {
+            background: #E8F5E9;
+        }
+
+        .status-credit {
+            background: #FFEBEE;
+        }
+
+        .bill-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 10px;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 10mm;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bill-header">
+        <h1 id="shopName">PHOTOCOPY SHOP</h1>
+        <p id="shopAddress">Shop Address, Street, City</p>
+        <p id="shopPhone">Phone: 0300-1234567</p>
+    </div>
+
+    <div class="bill-info">
+        <span><strong>Bill No:</strong> <span id="billNumber">BILL-0001</span></span>
+        <span><strong>Date:</strong> <span id="billDate">24/01/2024</span></span>
+    </div>
+
+    <div class="customer-info">
+        <strong>Customer:</strong> <span id="customerName">Guest</span>
+    </div>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th class="qty">Qty</th>
+                <th class="price">Price</th>
+                <th class="total">Total</th>
+            </tr>
+        </thead>
+        <tbody id="itemsBody">
+            <tr>
+                <td>Sample Item</td>
+                <td class="qty">1</td>
+                <td class="price">100.00</td>
+                <td class="total">100.00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="bill-totals">
+        <div class="total-row">
+            <span>Subtotal:</span>
+            <span id="subtotal">Rs. 100.00</span>
+        </div>
+        <div class="total-row">
+            <span>Tax:</span>
+            <span id="tax">Rs. 0.00</span>
+        </div>
+        <div class="total-row grand-total">
+            <strong>GRAND TOTAL:</strong>
+            <strong id="grandTotal">Rs. 100.00</strong>
+        </div>
+    </div>
+
+    <div class="payment-status status-paid" id="paymentStatus">
+        PAID (Cash)
+    </div>
+
+    <div class="bill-footer">
+        <p>Thank you for your visit!</p>
+        <p id="footerShopName">PHOTOCOPY SHOP</p>
+    </div>
+
+    <div class="no-print" style="text-align: center; margin-top: 20px;">
+        <button onclick="window.print()" style="padding: 10px 20px; font-size: 14px;">Print Bill</button>
+    </div>
+
+    <script>
+        // Get bill data from URL parameters or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const billData = JSON.parse(urlParams.get('data') || '{}');
+
+        // Populate bill with data
+        if (billData.bill_number) {
+            document.getElementById('billNumber').textContent = billData.bill_number;
+        }
+        if (billData.date) {
+            document.getElementById('billDate').textContent = billData.date;
+        }
+        if (billData.customer) {
+            document.getElementById('customerName').textContent = billData.customer;
+        }
+        if (billData.items) {
+            const tbody = document.getElementById('itemsBody');
+            tbody.innerHTML = billData.items.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td class="qty">${item.qty}</td>
+                    <td class="price">Rs. ${item.price.toFixed(2)}</td>
+                    <td class="total">Rs. ${item.total.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
+        if (billData.subtotal !== undefined) {
+            document.getElementById('subtotal').textContent = `Rs. ${billData.subtotal.toFixed(2)}`;
+        }
+        if (billData.tax !== undefined) {
+            document.getElementById('tax').textContent = `Rs. ${billData.tax.toFixed(2)}`;
+        }
+        if (billData.total !== undefined) {
+            document.getElementById('grandTotal').textContent = `Rs. ${billData.total.toFixed(2)}`;
+        }
+        if (billData.payment_status) {
+            const statusDiv = document.getElementById('paymentStatus');
+            if (billData.payment_status === 'paid') {
+                statusDiv.className = 'payment-status status-paid';
+                statusDiv.textContent = `PAID (${billData.payment_method || 'Cash'})`;
+            } else {
+                statusDiv.className = 'payment-status status-credit';
+                statusDiv.textContent = 'CREDIT (UNPAID)';
+            }
+        }
+    </script>
+</body>
+</html>

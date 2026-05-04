@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15-alpine
+    container_name: photocopy_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: photocopy_user
+      POSTGRES_PASSWORD: photocopy_pass
+      POSTGRES_DB: photocopy_shop
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - photocopy_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U photocopy_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: photocopy_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 8069
+      DATABASE_URL: postgresql://photocopy_user:photocopy_pass@database:5432/photocopy_shop
+      JWT_SECRET: photocopy-jwt-secret-key-change-in-production-12345
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - "8069:8069"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - photocopy_network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build: ./frontend
+    container_name: photocopy_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:8069
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - photocopy_network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+
+networks:
+  photocopy_network:
+    driver: bridge
