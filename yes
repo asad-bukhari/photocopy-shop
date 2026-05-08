@@ -1,0 +1,46 @@
+vercel support with neon database
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch main
+# Your branch is up to date with 'origin/main'.
+#
+# Changes to be committed:
+#	modified:   .env.example
+#	deleted:    DEPLOY_TO_RENDER.md
+#	new file:   DEPLOY_TO_VERCEL.md
+#	modified:   README.md
+#	new file:   api/.env.example
+#	new file:   api/config/config.js
+#	new file:   api/config/database.js
+#	new file:   api/config/upload.js
+#	new file:   api/controllers/authController.js
+#	new file:   api/controllers/billController.js
+#	new file:   api/controllers/categoryController.js
+#	new file:   api/controllers/customerController.js
+#	new file:   api/controllers/dashboardController.js
+#	new file:   api/controllers/expenseController.js
+#	new file:   api/controllers/productController.js
+#	new file:   api/controllers/reportController.js
+#	new file:   api/controllers/settingsController.js
+#	new file:   api/controllers/stockController.js
+#	new file:   api/middleware/auth.js
+#	new file:   api/middleware/errorHandler.js
+#	new file:   api/middleware/validation.js
+#	new file:   api/package-lock.json
+#	new file:   api/package.json
+#	new file:   api/prisma/schema.prisma
+#	new file:   api/routes/auth.js
+#	new file:   api/routes/bills.js
+#	new file:   api/routes/categories.js
+#	new file:   api/routes/customers.js
+#	new file:   api/routes/dashboard.js
+#	new file:   api/routes/expenses.js
+#	new file:   api/routes/products.js
+#	new file:   api/routes/reports.js
+#	new file:   api/routes/settings.js
+#	new file:   api/seed.js
+#	new file:   api/server.js
+#	deleted:    render.yaml
+#	new file:   vercel.json
+#
