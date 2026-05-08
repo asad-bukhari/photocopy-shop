@@ -4,6 +4,8 @@ A comprehensive full-stack web application for managing photocopy shop operation
 
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-supported-brightgreen.svg)](https://www.docker.com/)
+[![Vercel](https://img.shields.io/badge/deploy%20to-vercel-blue.svg)](https://vercel.com/)
+[![Neon](https://img.shields.io/badge/database-neon-green.svg)](https://neon.tech/)
 [![React](https://img.shields.io/badge/react-19-blue.svg)](https://reactjs.org/)
 [![Node](https://img.shields.io/badge/node-18-green.svg)](https://nodejs.org/)
 
@@ -110,11 +112,79 @@ A comprehensive full-stack web application for managing photocopy shop operation
 ### **DevOps**
 - **Docker** - Containerization
 - **Docker Compose** - Multi-container orchestration
+- **Vercel** - Serverless deployment platform ⭐ NEW
+- **Neon** - Serverless PostgreSQL database ⭐ NEW
 - **Nginx** (Optional) - Reverse proxy
 
 ---
 
 ## 🚀 Quick Start
+
+### Choose Your Deployment Method
+
+**🔥 For Production (Recommended):**
+- **[Vercel + Neon](#-vercel--neon-deployment-recommended)** - Modern serverless hosting with excellent performance and free tiers
+
+**🐳 For Local Development:**
+- **[Docker Compose](#-docker-quick-start)** - All-in-one local setup with one command
+
+---
+
+## ☁️ Vercel + Neon Deployment (Recommended)
+
+Deploy your Photocopy Shop to production in under 15 minutes with **free hosting** from Vercel and Neon.
+
+### Why Vercel + Neon?
+
+- **Vercel**: Perfect for React + Node.js apps with automatic deployments, CDN, and serverless functions
+- **Neon**: Serverless PostgreSQL with auto-scaling and free tier
+- **Free Tier**: Both platforms offer generous free tiers perfect for small shops
+- **Performance**: Excellent response times and global CDN
+- **Zero DevOps**: No server management, automatic scaling
+
+### Quick Deploy
+
+1. **Set up Neon Database** (5 minutes)
+   ```bash
+   # 1. Go to https://neon.tech and sign up (free)
+   # 2. Create a new project
+   # 3. Copy your connection string
+   ```
+
+2. **Deploy Backend to Vercel** (5 minutes)
+   ```bash
+   # 1. Go to https://vercel.com and sign up (free)
+   # 2. Import your GitHub repository
+   # 3. Configure:
+   #    - Root Directory: ./api
+   #    - Environment Variables:
+   #      DATABASE_URL = (your Neon connection string)
+   #      JWT_SECRET = (generate a random string)
+   #      CORS_ORIGIN = https://your-frontend.vercel.app
+   #      NODE_ENV = production
+   # 4. Click Deploy
+   ```
+
+3. **Deploy Frontend to Vercel** (5 minutes)
+   ```bash
+   # 1. Create new project in Vercel (same repo)
+   # 2. Configure:
+   #    - Framework Preset: Vite
+   #    - Root Directory: ./
+   #    - Environment Variables:
+   #      VITE_API_URL = https://your-backend.vercel.app/api/photocopy
+   # 3. Click Deploy
+   ```
+
+**That's it! Your shop is live.** 🎉
+
+### Detailed Guide
+
+For step-by-step instructions with screenshots and troubleshooting, see **[DEPLOY_TO_VERCEL.md](DEPLOY_TO_VERCEL.md)**.
+
+---
+
+## 🐳 Docker Quick Start
 
 ### Prerequisites
 - Docker and Docker Compose installed
@@ -473,7 +543,7 @@ photocopy-shop/
 │   ├── vite.config.js
 │   └── tailwind.config.js
 │
-├── backend/                       # Node.js Backend
+├── backend/                       # Node.js Backend (for Docker/local)
 │   ├── prisma/
 │   │   └── schema.prisma          # Database schema
 │   ├── src/
@@ -509,9 +579,27 @@ photocopy-shop/
 │   ├── .env                       # Environment variables
 │   └── package.json
 │
+├── api/                           # Backend for Vercel Deployment ⭐ NEW
+│   ├── prisma/
+│   │   └── schema.prisma          # Database schema
+│   ├── config/                    # Configuration
+│   ├── controllers/               # Route controllers
+│   ├── middleware/                # Express middleware
+│   ├── routes/                    # API routes
+│   ├── server.js                  # Express app (Vercel-compatible)
+│   ├── seed.js                    # Database seeder
+│   ├── package.json               # Dependencies
+│   └── .env.example               # Environment variables template
+│
 ├── docker-compose.yml             # Docker orchestration
+├── vercel.json                    # Vercel configuration ⭐ NEW
+├── render.yaml                    # Render configuration
 ├── .gitignore
-└── README.md
+├── .env.example                   # Environment variables template
+├── README.md                      # This file
+├── DEPLOY_TO_VERCEL.md            # Vercel deployment guide ⭐ NEW
+├── DEPLOY_TO_RENDER.md            # Render deployment guide
+└── CLAUDE.md                      # AI assistant development guide
 ```
 
 ---
@@ -571,7 +659,72 @@ services:
 
 ## 🚢 Deployment
 
-### Docker Deployment (Recommended)
+### Choose Your Deployment Method
+
+**🔥 Production (Recommended):**
+- **[Vercel + Neon](#️-vercel--neon-deployment)** - Free hosting with excellent performance
+  - Step-by-step guide: **[DEPLOY_TO_VERCEL.md](DEPLOY_TO_VERCEL.md)**
+  - Free tier available
+  - Automatic deployments
+  - Global CDN
+
+**🐳 Local Development:**
+- **[Docker Compose](#-docker-deployment)** - All-in-one local setup
+  - Best for development
+  - Full offline capability
+  - Easy testing
+
+**☁️ Alternative Production:**
+- **[Render](#️-render-deployment)** - Alternative cloud platform
+  - Step-by-step guide: **[DEPLOY_TO_RENDER.md](DEPLOY_TO_RENDER.md)**
+  - Free tier available
+  - Simple setup
+
+---
+
+## ☁️ Vercel + Neon Deployment
+
+**Status**: ✅ Recommended for Production
+
+**Cost**: Free tier available (perfect for small shops)
+
+**Deployment Time**: ~15 minutes
+
+**Guide**: See **[DEPLOY_TO_VERCEL.md](DEPLOY_TO_VERCEL.md)** for complete step-by-step instructions.
+
+### Quick Summary
+
+1. **Set up Neon Database** (5 min)
+   - Go to https://neon.tech
+   - Create free account
+   - Create new project
+   - Copy connection string
+
+2. **Deploy Backend** (5 min)
+   - Go to https://vercel.com
+   - Import GitHub repo
+   - Root dir: `./api`
+   - Add env vars: `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `NODE_ENV`
+   - Deploy
+
+3. **Deploy Frontend** (5 min)
+   - Create new Vercel project
+   - Root dir: `./`
+   - Framework: Vite
+   - Add env var: `VITE_API_URL`
+   - Deploy
+
+**Benefits:**
+- ✅ Free tier (both platforms)
+- ✅ Automatic HTTPS
+- ✅ Global CDN
+- ✅ Auto-scaling
+- ✅ Zero devops
+- ✅ Git-based deployments
+
+---
+
+## 🐳 Docker Deployment
 
 ```bash
 # Build and start
@@ -590,10 +743,38 @@ docker compose restart
 ### Production Considerations
 
 1. **Environment Variables**: Use strong JWT_SECRET
-2. **Database**: Use managed PostgreSQL service
+2. **Database**: Use managed PostgreSQL service (Neon recommended)
 3. **HTTPS**: Use reverse proxy (Nginx) with SSL
 4. **Backups**: Regular database backups
 5. **Monitoring**: Set up logging and monitoring
+
+---
+
+## 🌐 Render Deployment
+
+**Status**: ✅ Alternative for Production
+
+**Cost**: Free tier available
+
+**Deployment Time**: ~20 minutes
+
+**Guide**: See **[DEPLOY_TO_RENDER.md](DEPLOY_TO_RENDER.md)** for complete instructions.
+
+### Quick Summary
+
+Render provides free hosting for web services, databases, and static sites.
+
+1. Fork this repository
+2. Create Render account at https://render.com
+3. Deploy using `render.yaml` configuration
+4. Set environment variables
+5. Your app is live!
+
+**Benefits:**
+- ✅ Free tier available
+- ✅ Automatic SSL
+- ✅ Simple setup with render.yaml
+- ✅ Good performance
 
 ---
 

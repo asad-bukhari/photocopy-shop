@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  username      String?         @unique
+  pin           String
+  name          String
+  role          String          @default("cashier") // admin, cashier
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  priceChanges  PriceHistory[]  @relation("PriceChanges")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products    Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id                Int             @id @default(autoincrement())
+  name              String
+  categoryId        Int             @map("category_id")
+  isService         Boolean         @default(false) @map("is_service")
+  price             Decimal         @db.Decimal(10, 2)
+  cost              Decimal         @db.Decimal(10, 2)
+  stock             Int             @default(0)
+  lowStockThreshold Int             @default(10) @map("low_stock_threshold")
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  category          Category        @relation(fields: [categoryId], references: [id])
+  billItems         BillItem[]
+  priceHistory      PriceHistory[]
+
+  @@map("products")
+  @@index([categoryId])
+}
+
+model PriceHistory {
+  id           Int      @id @default(autoincrement())
+  productId    Int      @map("product_id")
+  oldPrice     Decimal  @map("old_price") @db.Decimal(10, 2)
+  newPrice     Decimal  @map("new_price") @db.Decimal(10, 2)
+  changeReason String?  @map("change_reason")
+  changedBy    Int      @map("changed_by")
+  createdAt    DateTime @default(now())
+
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  changedByUser User    @relation("PriceChanges", fields: [changedBy], references: [id])
+
+  @@map("price_history")
+  @@index([productId])
+  @@index([createdAt])
+}
+
+model Customer {
+  id            Int       @id @default(autoincrement())
+  name          String
+  phone         String?   @unique
+  email         String?
+  address       String?
+  creditBalance Decimal   @default(0) @map("credit_balance") @db.Decimal(10, 2)
+  unpaidBills   Int       @default(0) @map("unpaid_bills")
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  bills         Bill[]
+  payments      Payment[]
+
+  @@map("customers")
+}
+
+model Bill {
+  id            Int       @id @default(autoincrement())
+  billNumber    String    @unique @map("bill_number")
+  billDate      DateTime  @default(now()) @map("bill_date")
+  isGuest       Boolean   @map("is_guest")
+  customerId    Int?      @map("customer_id")
+  subtotal      Decimal   @db.Decimal(10, 2)
+  tax           Decimal   @default(0) @db.Decimal(10, 2)
+  discount      Decimal   @default(0) @db.Decimal(10, 2)
+  total         Decimal   @db.Decimal(10, 2)
+  paymentStatus String    @map("payment_status") // paid, credit, partial
+  paymentMethod String?   @map("payment_method") // cash, online
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  customer      Customer? @relation(fields: [customerId], references: [id])
+  items         BillItem[]
+  payments      Payment[]
+
+  @@map("bills")
+}
+
+model BillItem {
+  id          Int      @id @default(autoincrement())
+  billId      Int      @map("bill_id")
+  productId   Int      @map("product_id")
+  productName String   @map("product_name")
+  category    String
+  quantity    Decimal  @db.Decimal(10, 2)
+  unitPrice   Decimal  @map("unit_price") @db.Decimal(10, 2)
+  unitCost    Decimal? @map("unit_cost") @db.Decimal(10, 2)
+  costTotal   Decimal? @map("cost_total") @db.Decimal(10, 2)
+  subtotal    Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+
+  bill        Bill     @relation(fields: [billId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
+
+  @@map("bill_items")
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  customerId    Int?     @map("customer_id")
+  billId        Int?     @map("bill_id")
+  amount        Decimal  @db.Decimal(10, 2)
+  paymentMethod String   @map("payment_method")
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  customer      Customer? @relation(fields: [customerId], references: [id])
+  bill          Bill?    @relation(fields: [billId], references: [id])
+
+  @@map("payments")
+}
+
+model Shop {
+  id        Int      @id @default(autoincrement())
+  name      String   @default("Photocopy Shop")
+  phone     String?  @default("+92 XXX XXXXXXX")
+  email     String?  @default("info@photocopyshop.pk")
+  logoUrl   String?  @map("logo_url")
+  address   String?
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("shops")
+}
+
+enum ExpenseCategory {
+  OPERATING
+  SUPPLIES
+  STAFF
+}
+
+model Expense {
+  id              Int             @id @default(autoincrement())
+  category        ExpenseCategory
+  title           String
+  description     String?
+  amount          Decimal         @db.Decimal(10, 2)
+  expenseDate     DateTime        @default(now()) @map("expense_date")
+  paymentMethod   String?         @map("payment_method")
+  referenceNumber String?         @map("reference_number")
+  notes           String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@map("expenses")
+  @@index([expenseDate])
+  @@index([category])
+}
