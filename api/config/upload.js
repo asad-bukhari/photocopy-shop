@@ -3,7 +3,11 @@ const path = require('path');
 const fs = require('fs');
 
 // Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, '../../uploads');
+// In Vercel serverless, /tmp is the only writable filesystem
+const uploadsDir = process.env.NODE_ENV === 'production'
+  ? '/tmp/uploads'
+  : path.join(__dirname, '../../uploads');
+
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }

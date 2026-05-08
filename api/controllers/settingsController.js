@@ -119,9 +119,14 @@ exports.uploadLogo = async (req, res) => {
 
     // Delete old logo if exists
     if (shop && shop.logoUrl) {
-      const oldLogoPath = path.join(__dirname, '../../..', shop.logoUrl);
-      if (fs.existsSync(oldLogoPath)) {
-        fs.unlinkSync(oldLogoPath);
+      const uploadsDir = process.env.NODE_ENV === 'production' ? '/tmp' : path.join(__dirname, '../../..');
+      const oldLogoPath = path.join(uploadsDir, shop.logoUrl);
+      try {
+        if (fs.existsSync(oldLogoPath)) {
+          fs.unlinkSync(oldLogoPath);
+        }
+      } catch (err) {
+        console.error('Failed to delete old logo:', err.message);
       }
     }
 
